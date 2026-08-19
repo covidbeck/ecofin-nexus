@@ -1,0 +1,40 @@
+---
+description: FastAPI/Python stack, DB layout, and deterministic math_engine formulas
+globs: ["backend/**/*.py"]
+alwaysApply: false
+---
+
+# Backend
+
+## Stack
+Python 3.12, FastAPI, SQLAlchemy 2, Alembic, Pydantic 2, PostgreSQL (psycopg). Local infra: Docker Compose.
+
+## Layout
+- `app/api/` — REST routes only
+- `app/core/` — config, security, DB session
+- `app/db/` — fixtures (e.g. KREM tariffs JSON)
+- `app/math_engine/` — pure Python math (no I/O, no LLM)
+- `app/models/` — SQLAlchemy ORM
+- `app/schemas/` — Pydantic DTOs (write these first)
+- `app/services/` — business logic and AI extraction wrappers
+
+## Database
+SQLAlchemy 2 style. Sessions from `app/core`. Schema changes only via Alembic in `backend/alembic/`. Fixtures are data, not calculated in Python ad hoc. JWT auth only — no OAuth, email verification, or payments.
+
+## Math engine (exact models)
+Implement in `backend/app/math_engine/` with pure Python. Do not change formulas.
+
+**A — Hourly load from monthly PDF**  
+\(E_h = (E_{month} / D_{month}) \cdot w_h\)  
+\(w_h\) comes from business fixtures.
+
+**B — Tariff arbitrage (peak-load shifting)**  
+\(\Delta C = \sum_{h \in Peak} E_{flex,h} \cdot (R_{peak} - R_{night})\)
+
+**C — Scope 2 CO₂ (GHG Protocol)**  
+Kazakhstan grid factor \(EF_{grid}^{KZ} = 0.892\)  
+\(\Delta E_{Scope2} = \Delta E_{kWh} \cdot EF_{grid}^{KZ}\)
+
+**D — ESG green taxonomy gap (Damu Fund)**  
+Eligible if \(I_{gap} \ge 0.20\)  
+\(I_{gap} = (E_{base} - E_{opt}) / E_{base}\)
