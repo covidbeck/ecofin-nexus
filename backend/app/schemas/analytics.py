@@ -2,6 +2,8 @@ from typing import Literal
 
 from pydantic import BaseModel, Field
 
+from app.schemas.utility_bill import HourlyProfileResponseSchema, UtilityBillInputSchema
+
 
 class ArbitrageResultSchema(BaseModel):
     delta_cost_kzt: float = Field(..., description="Daily savings ΔC from peak-to-night shift, KZT")
@@ -20,3 +22,16 @@ class ESGUnderwritingReportSchema(BaseModel):
         ..., description="Damu Fund green-loan gate (I_gap >= 0.20)"
     )
     summary: str
+
+
+class HealthResponseSchema(BaseModel):
+    status: str
+    message: str
+
+
+class BillAnalysisResponseSchema(BaseModel):
+    bill: UtilityBillInputSchema
+    hourly_profile: HourlyProfileResponseSchema
+    arbitrage: ArbitrageResultSchema
+    scope2: Scope2EmissionsSchema
+    esg: ESGUnderwritingReportSchema

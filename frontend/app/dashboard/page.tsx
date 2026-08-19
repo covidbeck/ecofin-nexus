@@ -6,21 +6,12 @@ import { BillUploader } from "@/components/BillUploader";
 import { Dashboard } from "@/components/Dashboard";
 import type { BillAnalysisResponse } from "@/lib/types";
 
-export default function HomePage() {
+export default function DashboardPage() {
   const [analysis, setAnalysis] = useState<BillAnalysisResponse | null>(null);
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <p className="text-xs font-medium tracking-[0.2em] text-emerald-600 uppercase">
-        EcoFin Nexus
-      </p>
-      <h1 className="mt-3 max-w-3xl text-4xl leading-tight font-light tracking-tight text-slate-900">
-        ESG-андеррайтинг и тарифный арбитраж по квитанции.
-      </h1>
-      <p className="mt-4 max-w-2xl text-sm leading-6 text-slate-500">
-        Загрузите PDF. Цифры на дашборде — только ответ API, без расчётов в браузере.
-      </p>
-
+      <h1 className="text-3xl font-light tracking-tight text-slate-900">Dashboard</h1>
       <div className="mt-10">
         {analysis ? (
           <Dashboard data={analysis} onReset={() => setAnalysis(null)} />
