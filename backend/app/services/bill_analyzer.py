@@ -53,4 +53,6 @@ def analyze_utility_bill(bill: UtilityBillInputSchema) -> BillAnalysisResponseSc
         arbitrage=arbitrage,
         scope2=scope2,
         esg=esg,
+        ai_roadmap=["", "", ""],
+        esg_executive_summary="",
     )

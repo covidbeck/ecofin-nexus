@@ -46,4 +46,6 @@ export interface BillAnalysisResponse {
   arbitrage: ArbitrageResult;
   scope2: Scope2;
   esg: ESG;
+  ai_roadmap: string[];
+  esg_executive_summary: string;
 }

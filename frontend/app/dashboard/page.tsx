@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 
-import { BillUploader } from "@/components/BillUploader";
-import { Dashboard } from "@/components/Dashboard";
+import { DashboardWorkspace } from "@/components/dashboard-workspace";
 import type { BillAnalysisResponse } from "@/lib/types";
 
 export default function DashboardPage() {
@@ -11,13 +10,13 @@ export default function DashboardPage() {
 
   return (
     <main className="mx-auto max-w-6xl px-6 py-12">
-      <h1 className="text-3xl font-light tracking-tight text-slate-900">Dashboard</h1>
+      <h1 className="text-3xl font-light tracking-tight text-slate-800">Dashboard</h1>
       <div className="mt-10">
-        {analysis ? (
-          <Dashboard data={analysis} onReset={() => setAnalysis(null)} />
-        ) : (
-          <BillUploader onSuccess={setAnalysis} />
-        )}
+        <DashboardWorkspace
+          analysis={analysis}
+          onSuccess={setAnalysis}
+          onReset={() => setAnalysis(null)}
+        />
       </div>
     </main>
   );

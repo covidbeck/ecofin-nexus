@@ -35,3 +35,5 @@ class BillAnalysisResponseSchema(BaseModel):
     arbitrage: ArbitrageResultSchema
     scope2: Scope2EmissionsSchema
     esg: ESGUnderwritingReportSchema
+    ai_roadmap: list[str] = Field(..., min_length=3, max_length=3)
+    esg_executive_summary: str

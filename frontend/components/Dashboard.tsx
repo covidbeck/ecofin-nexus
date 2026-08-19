@@ -73,16 +73,6 @@ export function Dashboard({ data, onReset }: DashboardProps) {
           <p className="mt-3 text-sm text-slate-500">{esg.summary}</p>
         </article>
       </div>
-
-      <section className="rounded-xl border border-gray-200 bg-white p-6 shadow-sm">
-        <p className="text-xs tracking-[0.16em] text-slate-400 uppercase">Рекомендации</p>
-        <h3 className="mt-2 text-lg font-medium text-slate-900">Ночной тариф</h3>
-        <p className="mt-3 max-w-3xl text-sm leading-7 text-slate-600">
-          Перенесите {arbitrage.shifted_kwh.toFixed(2)} кВт·ч гибкой нагрузки (выпечка, холодильные
-          циклы, тестомесы) с пиковых часов 19:00–23:00 на ночь 23:00–07:00. По расчёту ядра это
-          экономия {formatKzt(arbitrage.delta_cost_kzt)} ₸ в сутки при том же объёме энергии.
-        </p>
-      </section>
     </div>
   );
 }
