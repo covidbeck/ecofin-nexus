@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
-import { AiFaqWidget } from "@/components/ai-faq-widget";
-import { Navbar } from "@/components/navbar";
+import { AppShell } from "@/components/app-shell";
 import { Providers } from "@/components/providers";
 
 import "./globals.css";
@@ -13,9 +12,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Nexus — Zero-CapEx AI Энергоаудит",
+  title: "EcoFin Nexus — Предиктивный энергоменеджмент и ESG",
   description:
-    "Предиктивное управление энергией и ESG-андеррайтинг для МСБ Казахстана: тарифный арбитраж, Scope 2 и заявка в фонд «Даму».",
+    "Nexus: Zero-CapEx энергоаудит для МСБ Казахстана. Тарифный арбитраж, Scope 2 и подготовка пакета для зелёного финансирования фонда «Даму».",
 };
 
 export default function RootLayout({
@@ -25,11 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
-      <body className={`${inter.className} min-h-screen text-emerald-50 antialiased`}>
+      <body className={`${inter.className} min-h-screen bg-slate-50 text-slate-900 antialiased`}>
         <Providers>
-          <Navbar />
-          {children}
-          <AiFaqWidget />
+          <AppShell>{children}</AppShell>
         </Providers>
       </body>
     </html>

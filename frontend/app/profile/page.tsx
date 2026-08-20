@@ -1,14 +1,19 @@
+"use client";
+
 import { CompanyProfile } from "@/components/company-profile";
+import { ProtectedRoute } from "@/components/protected-route";
 
 export default function ProfilePage() {
   return (
-    <main className="mx-auto max-w-6xl px-6 pt-14 pb-24">
-      <p className="text-[11px] font-medium tracking-[0.18em] text-accent-400 uppercase">
-        Профиль компании
-      </p>
-      <div className="mt-6">
-        <CompanyProfile />
-      </div>
-    </main>
+    <ProtectedRoute>
+      <main className="mx-auto max-w-6xl px-6 pt-12 pb-24">
+        <p className="text-xs font-semibold tracking-wide text-emerald-700 uppercase">
+          Профиль компании
+        </p>
+        <div className="mt-6">
+          <CompanyProfile />
+        </div>
+      </main>
+    </ProtectedRoute>
   );
 }

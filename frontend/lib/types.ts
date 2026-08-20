@@ -64,6 +64,11 @@ export interface SubscribeResponse {
   tier: string;
 }
 
+export interface CaptchaResponse {
+  status: string;
+  score: number;
+}
+
 export interface FaqItem {
   id: string;
   question: string;

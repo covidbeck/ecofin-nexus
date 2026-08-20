@@ -1,5 +1,6 @@
 import type {
   BillAnalysisResponse,
+  CaptchaResponse,
   ChatResponse,
   FaqListResponse,
   ProfileMeResponse,
@@ -9,6 +10,8 @@ import type {
 
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
+// Mock bearer accepted by the backend demo profile route. Not a production
+// auth mechanism — the real flow will issue signed tokens post-hackathon.
 export const DEMO_TOKEN = "demo-jwt-token";
 
 export class ApiError extends Error {
@@ -42,7 +45,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     response = await fetch(`${API_BASE}${path}`, init);
   } catch {
-    throw new ApiError(`Бэкенд недоступен. Запустите API на ${API_BASE}.`);
+    throw new ApiError(`Сервис Nexus временно недоступен. Проверьте, что API запущен (${API_BASE}).`);
   }
 
   if (!response.ok) {
@@ -65,6 +68,26 @@ export async function analyzeUtilityBill(file: File): Promise<BillAnalysisRespon
   return request<BillAnalysisResponse>("/api/v1/analyze-bill", { method: "POST", body });
 }
 
+export async function fetchFaq(): Promise<FaqListResponse> {
+  return request<FaqListResponse>("/api/v1/faq");
+}
+
+export async function sendChatMessage(message: string): Promise<ChatResponse> {
+  return request<ChatResponse>("/api/v1/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message }),
+  });
+}
+
+export async function verifyCaptcha(token: string): Promise<CaptchaResponse> {
+  return request<CaptchaResponse>("/api/v1/verify-captcha", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ token }),
+  });
+}
+
 export async function subscribe(payload: SubscribeRequest): Promise<SubscribeResponse> {
   return request<SubscribeResponse>("/api/v1/subscribe", {
     method: "POST",
@@ -76,17 +99,5 @@ export async function subscribe(payload: SubscribeRequest): Promise<SubscribeRes
 export async function fetchProfileMe(): Promise<ProfileMeResponse> {
   return request<ProfileMeResponse>("/api/v1/profile/me", {
     headers: { Authorization: `Bearer ${DEMO_TOKEN}` },
-  });
-}
-
-export async function fetchFaq(): Promise<FaqListResponse> {
-  return request<FaqListResponse>("/api/v1/faq");
-}
-
-export async function sendChatMessage(message: string): Promise<ChatResponse> {
-  return request<ChatResponse>("/api/v1/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message }),
   });
 }

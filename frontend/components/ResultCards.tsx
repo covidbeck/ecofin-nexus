@@ -7,6 +7,13 @@ function formatKzt(value: number | undefined | null) {
   return new Intl.NumberFormat("ru-KZ", { maximumFractionDigits: 0 }).format(value);
 }
 
+const ESG_EXPLANATION: Record<"eligible" | "ineligible", string> = {
+  eligible:
+    "Потенциал снижения ≥20%. Компания может готовить пакет на зелёное финансирование Даму.",
+  ineligible:
+    "Текущий сценарий даёт снижение менее 20%. Выполните план оптимизации и загрузите следующую квитанцию для повторной оценки.",
+};
+
 type ResultCardsProps = {
   data?: BillAnalysisResponse | null;
 };
@@ -16,54 +23,59 @@ export function ResultCards({ data }: ResultCardsProps) {
   const scope2 = data?.scope2;
   const esg = data?.esg;
   const eligible = esg?.status === "eligible";
+  const explanation = esg?.status ? ESG_EXPLANATION[esg.status] : null;
 
   return (
     <div className="grid gap-4 md:grid-cols-3">
-      <article className="glass rounded-2xl p-6">
-        <p className="text-[11px] tracking-[0.16em] text-emerald-100/50 uppercase">
+      <article className="card p-6">
+        <p className="text-xs font-medium tracking-wide text-slate-400 uppercase">
           Потенциальная экономия
         </p>
-        <p className="mt-4 text-3xl font-semibold text-accent-400">
+        <p className="mt-3 text-3xl font-semibold text-emerald-600">
           {formatKzt(arbitrage?.delta_cost_kzt)} ₸
         </p>
-        <p className="mt-2 text-sm text-emerald-100/60">
-          В сутки · {arbitrage?.savings_percent?.toFixed(1) ?? "—"}% от базовой стоимости
+        <p className="mt-2 text-sm text-slate-500">
+          В сутки при переносе нагрузки · {arbitrage?.savings_percent?.toFixed(1) ?? "—"}% от
+          базовой стоимости
         </p>
-        <p className="mt-1 text-xs text-emerald-100/40">
-          Сдвиг {arbitrage?.shifted_kwh?.toFixed(2) ?? "—"} кВт·ч с пика на ночной тариф
+        <p className="mt-1 text-xs text-slate-400">
+          Гибкая нагрузка: {arbitrage?.shifted_kwh?.toFixed(2) ?? "—"} кВт·ч с пика на ночь
         </p>
       </article>
 
-      <article className="glass rounded-2xl p-6">
-        <p className="text-[11px] tracking-[0.16em] text-emerald-100/50 uppercase">
-          Предотвращённые выбросы
+      <article className="card p-6">
+        <p className="text-xs font-medium tracking-wide text-slate-400 uppercase">
+          Scope 2 · выбросы CO₂
         </p>
-        <p className="mt-4 text-3xl font-semibold text-teal-300">
+        <p className="mt-3 text-3xl font-semibold text-teal-500">
           {scope2?.co2_avoided_tonnes?.toFixed(3) ?? "—"} т
         </p>
-        <p className="mt-2 text-sm text-emerald-100/60">
-          Scope 2 CO₂ · эквивалент {scope2?.trees_equivalent?.toFixed(1) ?? "—"} деревьев
+        <p className="mt-2 text-sm text-slate-500">
+          Предотвращённые выбросы по коэффициенту энергосистемы РК
+        </p>
+        <p className="mt-1 text-xs text-slate-400">
+          Эквивалент {scope2?.trees_equivalent?.toFixed(1) ?? "—"} высаженных деревьев
         </p>
       </article>
 
-      <article className="glass rounded-2xl p-6">
-        <p className="text-[11px] tracking-[0.16em] text-emerald-100/50 uppercase">
-          ESG-статус для «Даму»
+      <article className="card p-6">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs font-medium tracking-wide text-slate-400 uppercase">
+            Статус «Даму»
+          </p>
+          <span
+            className={`inline-flex rounded-full px-2.5 py-1 text-[11px] font-semibold tracking-wide uppercase ${
+              eligible ? "bg-emerald-100 text-emerald-700" : "bg-slate-100 text-slate-600"
+            }`}
+          >
+            {eligible ? "Приемлемо" : esg?.status ? "Пока нет" : "—"}
+          </span>
+        </div>
+        <p className="mt-3 text-3xl font-semibold text-slate-900">
+          I_gap {esg?.i_gap != null ? esg.i_gap.toFixed(3) : "—"}
         </p>
-        <p className="mt-4 text-3xl font-semibold text-white">
-          I_gap {esg?.i_gap?.toFixed(3) ?? "—"}
-        </p>
-        <span
-          className={`mt-3 inline-flex rounded-full px-3 py-1 text-[11px] font-medium tracking-wide uppercase ${
-            eligible
-              ? "bg-accent-500/15 text-accent-400 ring-1 ring-accent-400/30"
-              : "bg-white/5 text-emerald-100/60 ring-1 ring-white/10"
-          }`}
-        >
-          {eligible ? "eligible" : (esg?.status ?? "pending")}
-        </span>
-        <p className="mt-3 text-sm leading-6 text-emerald-100/60">
-          {esg?.summary ?? "Ожидание ответа API."}
+        <p className="mt-2 text-sm leading-6 text-slate-500">
+          {explanation ?? "Загрузите квитанцию, чтобы оценить право на зелёное финансирование."}
         </p>
       </article>
     </div>

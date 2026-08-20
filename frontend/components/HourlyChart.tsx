@@ -18,7 +18,7 @@ type HourlyChartProps = {
   points?: HourlyPoint[] | null;
 };
 
-const AXIS_TICK = { fill: "#a7f3d0", fontSize: 11 };
+const AXIS_TICK = { fill: "#64748b", fontSize: 11 };
 
 export function HourlyChart({ points }: HourlyChartProps) {
   const series = points ?? [];
@@ -30,7 +30,7 @@ export function HourlyChart({ points }: HourlyChartProps) {
 
   if (data.length === 0) {
     return (
-      <div className="flex h-80 items-center justify-center text-sm text-emerald-100/40">
+      <div className="flex h-80 items-center justify-center text-sm text-slate-400">
         Нет почасовых точек для графика.
       </div>
     );
@@ -42,24 +42,19 @@ export function HourlyChart({ points }: HourlyChartProps) {
         <ComposedChart data={data} margin={{ top: 8, right: 8, left: 0, bottom: 0 }}>
           <defs>
             <linearGradient id="kwhFill" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor="#10b981" stopOpacity={0.5} />
-              <stop offset="95%" stopColor="#10b981" stopOpacity={0.02} />
+              <stop offset="5%" stopColor="#059669" stopOpacity={0.35} />
+              <stop offset="95%" stopColor="#059669" stopOpacity={0.02} />
             </linearGradient>
           </defs>
-          <CartesianGrid strokeDasharray="3 3" stroke="rgba(167, 243, 208, 0.12)" />
-          <XAxis dataKey="hour" tick={AXIS_TICK} interval={2} stroke="rgba(167,243,208,0.25)" />
+          <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" />
+          <XAxis dataKey="hour" tick={AXIS_TICK} interval={2} stroke="#cbd5e1" />
           <YAxis
             yAxisId="kwh"
             tick={AXIS_TICK}
-            stroke="rgba(167,243,208,0.25)"
-            label={{ value: "кВт·ч", angle: -90, position: "insideLeft", fill: "#a7f3d0" }}
+            stroke="#cbd5e1"
+            label={{ value: "кВт·ч", angle: -90, position: "insideLeft", fill: "#64748b" }}
           />
-          <YAxis
-            yAxisId="cost"
-            orientation="right"
-            tick={AXIS_TICK}
-            stroke="rgba(167,243,208,0.25)"
-          />
+          <YAxis yAxisId="cost" orientation="right" tick={AXIS_TICK} stroke="#cbd5e1" />
           <Tooltip
             formatter={(value: number | string, name: string) =>
               name === "Стоимость"
@@ -67,22 +62,23 @@ export function HourlyChart({ points }: HourlyChartProps) {
                 : [`${Number(value).toFixed(3)} кВт·ч`, name]
             }
             contentStyle={{
-              backgroundColor: "rgba(7, 35, 24, 0.95)",
-              border: "1px solid rgba(52, 211, 153, 0.3)",
+              backgroundColor: "#ffffff",
+              border: "1px solid #e2e8f0",
               borderRadius: 12,
-              color: "#ecfdf5",
+              color: "#0f172a",
+              boxShadow: "0 4px 12px rgba(15,23,42,0.08)",
             }}
-            labelStyle={{ color: "#a7f3d0" }}
-            cursor={{ fill: "rgba(16, 185, 129, 0.08)" }}
+            labelStyle={{ color: "#64748b" }}
+            cursor={{ fill: "rgba(5, 150, 105, 0.06)" }}
           />
-          <Legend wrapperStyle={{ color: "#a7f3d0", fontSize: 12 }} />
-          <Bar yAxisId="cost" dataKey="cost" name="Стоимость" fill="rgba(52, 211, 153, 0.22)" />
+          <Legend wrapperStyle={{ color: "#64748b", fontSize: 12 }} />
+          <Bar yAxisId="cost" dataKey="cost" name="Стоимость" fill="#99f6e4" radius={[3, 3, 0, 0]} />
           <Area
             yAxisId="kwh"
             type="monotone"
             dataKey="kwh"
             name="Нагрузка"
-            stroke="#10b981"
+            stroke="#059669"
             strokeWidth={2}
             fill="url(#kwhFill)"
           />
