@@ -6,3 +6,8 @@ sqlalchemy
 psycopg
 alembic
 pytest
+google-generativeai
+PyPDF2
+Pillow
+reportlab
+python-docx

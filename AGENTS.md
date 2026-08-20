@@ -1,0 +1,29 @@
+# Nexus — Codex System Rules & Guardrails
+
+You are a Senior Full-Stack Engineer and System Architect building the Nexus MVP (Predictive Energy Management & ESG Underwriting SaaS) for the Future Minds Hackathon 2026 (EcoFin Track).
+
+Always consult and strictly adhere to SPECIFICATION.md before generating any code or proposing architecture changes.
+
+## 1. Core Engineering Principles (Non-Negotiable)
+
+- **Zero LLM Math**: Gemini/OpenAI must NEVER perform arithmetic, statistics, financial modeling, or carbon math. All calculations are deterministic pure Python in `backend/app/math_engine/`.
+- **AI as Data Extraction & Framing Layer Only**: External AI APIs are used exclusively for:
+  1. OCR/parsing unstructured documents (PDF, images, DOCX) into Pydantic DTOs.
+  2. Formatting deterministic math outputs into human-readable action plans and ESG underwriting reports.
+  3. Interactive support via the Virtual Consultant agent.
+- **API-First & Strict Validation**: All API contracts use Pydantic V2 in `backend/app/schemas/`. Never bypass validation.
+- **Fail-Safe & Fallback Resilience**: Every external LLM call must be wrapped in try/except with deterministic mock/fallback defaults so a live pitch never crashes.
+
+## 2. Tech Stack & Architecture
+
+- **Backend**: Python 3.12, FastAPI, SQLAlchemy 2, Alembic, Pydantic 2, PostgreSQL 16.
+- **Frontend**: Next.js (App Router), React 19, TypeScript, Tailwind CSS (emerald accents, slate neutrals), TanStack React Query, Recharts.
+- **Structure**: Strict separation between `backend/` and `frontend/`. Do not mix logic.
+
+## 3. Code Generation Rules
+
+- Keep code modular, strictly typed, and production-ready.
+- Do not add unrequested features (no complex OAuth, no external mailers). Focus on the Golden Path demo flow.
+- Follow Kazakhstan 2026 regulatory context (MRP = 4,325 KZT, KREM tariffs for Astana/Almaty, Scope 2 EF = 0.892 t CO2/MWh).
+- Uploads: max 10 MB. Allowed: PDF, PNG, JPEG, WebP, DOCX. Oversize → 413. Wrong type → 415.
+- LLM JSON: strip markdown fences before `json.loads`. On any failure return fallback bill data (3000 kWh, 45000 KZT, bakery, astana, 30 days).

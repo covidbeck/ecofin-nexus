@@ -21,6 +21,15 @@ Python 3.12, FastAPI, SQLAlchemy 2, Alembic, Pydantic 2, PostgreSQL (psycopg). L
 ## Database
 SQLAlchemy 2 style. Sessions from `app/core`. Schema changes only via Alembic in `backend/alembic/`. Fixtures are data, not calculated in Python ad hoc. JWT auth only — no OAuth, email verification, or payments.
 
+## Uploads
+Max 10 MB → HTTP 413. MIME: PDF, PNG, JPEG, WebP, DOCX → else HTTP 415.
+
+## AI extractor
+Default model `gemini-1.5-pro` (override via `GEMINI_MODEL`). PDF=PyPDF2, DOCX=python-docx, images=Pillow. Strip ```json fences. On any exception return fallback 3000 kWh / 45000 KZT / bakery / astana / 30 days.
+
+## 2026 fixtures
+MRP = 4325 KZT. Astana commercial 31.45–35.72 KZT/kWh excl. VAT. Almaty 39.87 excl. / 46.25 incl. VAT. EF_grid = 0.892 tCO2/MWh. KoAP excess surcharge 5%.
+
 ## Math engine (exact models)
 Implement in `backend/app/math_engine/` with pure Python. Do not change formulas.
 

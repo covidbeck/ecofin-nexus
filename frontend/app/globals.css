@@ -1,1 +1,39 @@
 @import "tailwindcss";
+
+@theme {
+  --color-nexus-950: #041710;
+  --color-nexus-900: #072318;
+  --color-nexus-850: #0a2d20;
+  --color-nexus-800: #0d3829;
+  --color-nexus-700: #14523c;
+  --color-nexus-600: #1c6b4f;
+  --color-accent-400: #34d399;
+  --color-accent-500: #10b981;
+  --color-accent-600: #059669;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  background-color: var(--color-nexus-950);
+  background-image:
+    radial-gradient(60rem 40rem at 12% -10%, rgba(16, 185, 129, 0.18), transparent 60%),
+    radial-gradient(50rem 36rem at 92% 0%, rgba(13, 56, 41, 0.9), transparent 55%);
+  background-attachment: fixed;
+}
+
+@utility glass {
+  background-color: rgba(13, 56, 41, 0.45);
+  backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid rgba(52, 211, 153, 0.14);
+}
+
+@utility glass-strong {
+  background-color: rgba(7, 35, 24, 0.86);
+  backdrop-filter: blur(24px) saturate(150%);
+  -webkit-backdrop-filter: blur(24px) saturate(150%);
+  border: 1px solid rgba(52, 211, 153, 0.2);
+}

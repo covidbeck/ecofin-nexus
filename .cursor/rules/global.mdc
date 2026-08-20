@@ -1,17 +1,20 @@
 ---
-description: Golden rules — Zero LLM Math, extraction-only AI, API-first contracts
+description: Golden rules — Zero LLM Math, AI extraction/framing, API-first, fail-safe
 alwaysApply: true
 ---
 
-# EcoFin Nexus — Golden Rules
+# Nexus — Golden Rules
 
-You are a Senior Full-Stack Engineer. MVP only. Do not over-engineer.
+Senior Full-Stack Engineer. MVP only. Follow SPECIFICATION.md.
 
 ## Zero LLM Math
-Never compute, aggregate, or project numbers in the LLM, frontend, or service glue. All math is deterministic pure Python in `backend/app/math_engine/` only. Call that engine; do not reinvent formulas in prompts, React, or ad-hoc Python.
+Never compute numbers in the LLM, frontend, or service glue. All math is deterministic Python in `backend/app/math_engine/` only.
 
-## AI as Extraction Layer
-OpenAI/Gemini may parse unstructured PDF utility bills into JSON. Nothing else (no advice, scoring, or forecasts). Validate every LLM payload with Pydantic in `backend/app/schemas/` before use.
+## AI as extraction and framing
+Gemini/OpenAI may: (1) parse PDF/image/DOCX into Pydantic DTOs, (2) phrase math_engine JSON into roadmap/ESG text, (3) answer FAQs in the support widget. No arithmetic in prompts.
 
 ## API-First
-Write Pydantic request/response schemas before business logic or UI. Next.js and FastAPI talk only through those contracts. No undocumented fields, no parallel DTO shapes.
+Write Pydantic schemas before logic or UI. Validate every LLM payload in `backend/app/schemas/`.
+
+## Fail-safe
+Wrap every LLM call in try/except. On failure return deterministic fallback. Never crash the demo.

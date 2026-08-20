@@ -23,11 +23,15 @@ services:
       dockerfile: Dockerfile
     container_name: ecofin-backend
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       DATABASE_URL: postgresql+psycopg://${POSTGRES_USER:-ecofin}:${POSTGRES_PASSWORD:-ecofin}@db:5432/${POSTGRES_DB:-ecofin}
       POSTGRES_USER: ${POSTGRES_USER:-ecofin}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ecofin}
       POSTGRES_DB: ${POSTGRES_DB:-ecofin}
+      GEMINI_API_KEY: ${GEMINI_API_KEY:-}
+      GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-pro}
     ports:
       - "8000:8000"
     depends_on:
@@ -35,6 +39,8 @@ services:
         condition: service_healthy
     volumes:
       - ./backend:/app
+      - ./:/project
+      - ./generate_test_bill.py:/app/generate_test_bill.py:ro
 
   frontend:
     build:

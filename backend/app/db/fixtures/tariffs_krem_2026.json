@@ -1,51 +1,60 @@
 {
-  "source": "KREM MNE RK 2026 (Astana / Almaty, SME retail zones)",
+  "source": "KREM / AstanaEnergosbyt / AZhK 2026",
+  "mrp_2026_kzt": 4325,
   "ef_grid": 0.892,
   "ef_grid_unit": "tCO2/MWh",
+  "koap_excess_surcharge": 0.05,
   "regions": {
     "astana": {
       "city": "Astana",
+      "provider": "AstanaEnergosbyt / Astana-REK",
+      "commercial_electricity_excl_vat_kzt_per_kwh": { "min": 31.45, "max": 35.72 },
+      "heat_metered_kzt_per_gcal": 6324.78,
+      "heat_unmetered_kzt_per_gcal": 8222.21,
       "zones": {
         "peak": {
           "label": "peak",
           "hours_local": "19:00-23:00",
           "hours": [19, 20, 21, 22],
-          "rate_kzt_per_kwh": 52.4
+          "rate_kzt_per_kwh": 35.72
         },
         "day": {
           "label": "day",
           "hours_local": "07:00-19:00",
           "hours": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-          "rate_kzt_per_kwh": 36.8
+          "rate_kzt_per_kwh": 33.58
         },
         "night": {
           "label": "night",
           "hours_local": "23:00-07:00",
           "hours": [23, 0, 1, 2, 3, 4, 5, 6],
-          "rate_kzt_per_kwh": 14.2
+          "rate_kzt_per_kwh": 31.45
         }
       }
     },
     "almaty": {
       "city": "Almaty",
+      "provider": "AZhK / EnergoSbyt",
+      "commercial_electricity_excl_vat_kzt_per_kwh": 39.87,
+      "commercial_electricity_incl_vat_kzt_per_kwh": 46.25,
       "zones": {
         "peak": {
           "label": "peak",
           "hours_local": "19:00-23:00",
           "hours": [19, 20, 21, 22],
-          "rate_kzt_per_kwh": 52.4
+          "rate_kzt_per_kwh": 46.25
         },
         "day": {
           "label": "day",
           "hours_local": "07:00-19:00",
           "hours": [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
-          "rate_kzt_per_kwh": 36.8
+          "rate_kzt_per_kwh": 39.87
         },
         "night": {
           "label": "night",
           "hours_local": "23:00-07:00",
           "hours": [23, 0, 1, 2, 3, 4, 5, 6],
-          "rate_kzt_per_kwh": 14.2
+          "rate_kzt_per_kwh": 24.92
         }
       }
     }

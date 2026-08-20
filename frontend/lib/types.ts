@@ -49,3 +49,40 @@ export interface BillAnalysisResponse {
   ai_roadmap: string[];
   esg_executive_summary: string;
 }
+
+export type TierId = "free" | "pro_7500" | "enterprise_50000";
+export type BillingCycle = "month" | "year";
+
+export interface SubscribeRequest {
+  tier_id: TierId;
+  billing_cycle: BillingCycle;
+}
+
+export interface SubscribeResponse {
+  status: string;
+  payment_url: string;
+  tier: string;
+}
+
+export interface FaqItem {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+export interface FaqListResponse {
+  items: FaqItem[];
+}
+
+export interface ChatResponse {
+  reply: string;
+  source: string;
+}
+
+export interface ProfileMeResponse {
+  authenticated: boolean;
+  user: {
+    sub: string;
+    role: string;
+  };
+}
