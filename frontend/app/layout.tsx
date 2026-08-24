@@ -12,9 +12,9 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "EcoFin Nexus — Предиктивный энергоменеджмент и ESG",
+  title: "Nexus — Resource Decision Engine",
   description:
-    "Nexus: Zero-CapEx энергоаудит для МСБ Казахстана. Тарифный арбитраж, Scope 2 и подготовка пакета для зелёного финансирования фонда «Даму».",
+    "Nexus превращает счета за ресурсы в объяснимый цифровой двойник предприятия: проверенные расчёты, аномалии, сценарии и лучший выполнимый план действий.",
 };
 
 export default function RootLayout({

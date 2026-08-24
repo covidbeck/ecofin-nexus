@@ -1,147 +1,116 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-import type { BillingCycle, TierId } from "@/lib/types";
-
-export type AuthUser = {
-  name: string;
-  email: string;
-  companyName: string;
-  role: string;
-};
-
-export type Subscription = {
-  tierId: TierId;
-  tierLabel: string;
-  cycle: BillingCycle;
-  activatedAt: string;
-};
-
-// Demo credentials shown to the jury on the login screen. Local-only session,
-// no real JWTs or secrets — see task brief.
-export const DEMO_CREDENTIALS = {
-  email: "demo@nexus.kz",
-  password: "NexusDemo2026!",
-  companyName: "Tandyr & Co",
-  role: "Владелец бизнеса",
-  name: "Азамат Тандыр",
-};
-
-const SESSION_KEY = "nexus.session";
-const SUBSCRIPTION_KEY = "nexus.subscription";
+import {
+  apiLogin,
+  apiLogout,
+  apiRegister,
+  fetchMe,
+  getToken,
+  setToken,
+} from "@/lib/api";
+import type { UserResponse } from "@/lib/types";
 
 type RegisterInput = {
   name: string;
-  companyName: string;
+  organization_name: string;
   email: string;
   password: string;
 };
 
 type AuthContextValue = {
-  user: AuthUser | null;
-  subscription: Subscription | null;
+  user: UserResponse | null;
   isAuthenticated: boolean;
   isHydrated: boolean;
-  login: (email: string, password: string) => AuthUser;
-  loginAsDemo: () => AuthUser;
-  register: (input: RegisterInput) => AuthUser;
-  logout: () => void;
-  setSubscription: (subscription: Subscription) => void;
+  login: (email: string, password: string) => Promise<UserResponse>;
+  register: (input: RegisterInput) => Promise<UserResponse>;
+  logout: () => Promise<void>;
+  refreshUser: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
 
-function readJson<T>(key: string): T | null {
-  try {
-    const raw = window.localStorage.getItem(key);
-    return raw ? (JSON.parse(raw) as T) : null;
-  } catch {
-    return null;
-  }
-}
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [subscription, setSubscriptionState] = useState<Subscription | null>(null);
+  const [user, setUser] = useState<UserResponse | null>(null);
   const [isHydrated, setIsHydrated] = useState(false);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
-    setUser(readJson<AuthUser>(SESSION_KEY));
-    setSubscriptionState(readJson<Subscription>(SUBSCRIPTION_KEY));
-    setIsHydrated(true);
-  }, []);
-
-  const persistUser = useCallback((next: AuthUser) => {
-    window.localStorage.setItem(SESSION_KEY, JSON.stringify(next));
-    setUser(next);
-    return next;
-  }, []);
-
-  const login = useCallback(
-    (email: string, password: string) => {
-      const normalized = email.trim().toLowerCase();
-      if (
-        normalized !== DEMO_CREDENTIALS.email.toLowerCase() ||
-        password !== DEMO_CREDENTIALS.password
-      ) {
-        throw new Error("Неверный email или пароль. Используйте демо-доступ для жюри.");
+    let cancelled = false;
+    async function hydrate() {
+      if (!getToken()) {
+        setIsHydrated(true);
+        return;
       }
-      return persistUser({
-        name: DEMO_CREDENTIALS.name,
-        email: DEMO_CREDENTIALS.email,
-        companyName: DEMO_CREDENTIALS.companyName,
-        role: DEMO_CREDENTIALS.role,
-      });
-    },
-    [persistUser],
-  );
-
-  const loginAsDemo = useCallback(
-    () =>
-      persistUser({
-        name: DEMO_CREDENTIALS.name,
-        email: DEMO_CREDENTIALS.email,
-        companyName: DEMO_CREDENTIALS.companyName,
-        role: DEMO_CREDENTIALS.role,
-      }),
-    [persistUser],
-  );
-
-  const register = useCallback(
-    (input: RegisterInput) =>
-      persistUser({
-        name: input.name.trim(),
-        email: input.email.trim(),
-        companyName: input.companyName.trim(),
-        role: "Владелец бизнеса",
-      }),
-    [persistUser],
-  );
-
-  const logout = useCallback(() => {
-    window.localStorage.removeItem(SESSION_KEY);
-    setUser(null);
+      try {
+        const me = await fetchMe();
+        if (!cancelled) setUser(me);
+      } catch {
+        setToken(null);
+      } finally {
+        if (!cancelled) setIsHydrated(true);
+      }
+    }
+    void hydrate();
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const setSubscription = useCallback((next: Subscription) => {
-    window.localStorage.setItem(SUBSCRIPTION_KEY, JSON.stringify(next));
-    setSubscriptionState(next);
+  const login = useCallback(async (email: string, password: string) => {
+    const response = await apiLogin(email, password);
+    setToken(response.token);
+    setUser(response.user);
+    return response.user;
+  }, []);
+
+  const register = useCallback(async (input: RegisterInput) => {
+    const response = await apiRegister(input);
+    setToken(response.token);
+    setUser(response.user);
+    return response.user;
+  }, []);
+
+  const logout = useCallback(async () => {
+    try {
+      await apiLogout();
+    } catch {
+      /* server session may already be gone; clear locally regardless */
+    }
+    setToken(null);
+    setUser(null);
+    queryClient.clear();
+  }, [queryClient]);
+
+  const refreshUser = useCallback(async () => {
+    if (!getToken()) return;
+    try {
+      setUser(await fetchMe());
+    } catch {
+      /* keep current state */
+    }
   }, []);
 
   const value = useMemo<AuthContextValue>(
     () => ({
       user,
-      subscription,
       isAuthenticated: user !== null,
       isHydrated,
       login,
-      loginAsDemo,
       register,
       logout,
-      setSubscription,
+      refreshUser,
     }),
-    [user, subscription, isHydrated, login, loginAsDemo, register, logout, setSubscription],
+    [user, isHydrated, login, register, logout, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

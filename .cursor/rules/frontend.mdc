@@ -20,11 +20,13 @@ Call FastAPI through typed clients in `lib/`. Types must match backend schemas. 
 ## React Query
 - Use QueryClient from `lib/` (single provider in the root layout)
 - Server state: `useQuery` / `useMutation` only — no ad-hoc `fetch` in components for domain data
-- Cache keys must be stable and descriptive (e.g. `["dashboard"]`, `["bill", id]`)
+- Cache keys must be stable and descriptive (e.g. `["dashboard"]`, `["consumption"]`)
 - Mutations invalidate related queries after success
 - Handle loading and error states in the UI; do not swallow failures
+
+## Product UI
+Digital Twin dashboard answers: what needs attention, and which feasible action is next. Every material number shows a status badge from the API (`measured` / `confirmed` / `estimated` / `simulated` / `unavailable`). Never compute ESG eligibility, Damu gates, or savings in React. Never promise guaranteed savings.
 
 ## Tailwind CSS
 - Style with Tailwind utility classes; avoid new global CSS except `globals.css` tokens
 - Prefer composition in `components/` over one-off page markup duplication
-- Keep the dashboard readable: savings, charts, and an "ESG Eligibility Status" badge from API flags — do not compute eligibility in React

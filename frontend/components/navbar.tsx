@@ -7,16 +7,17 @@ import { useEffect, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 
 const links = [
-  { href: "/analytics", label: "Аналитика" },
+  { href: "/dashboard", label: "Дашборд" },
+  { href: "/bills", label: "Счета" },
+  { href: "/scenarios", label: "Сценарии" },
   { href: "/subscription", label: "Подписка" },
-  { href: "/about", label: "О компании" },
   { href: "/profile", label: "Профиль" },
 ];
 
 function NexusLogo() {
   return (
-    <Link href="/analytics" className="flex items-center gap-2.5">
-      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-600 text-sm font-bold text-white shadow-sm">
+    <Link href="/" className="flex items-center gap-2.5">
+      <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-700 text-sm font-bold text-white shadow-sm">
         N
       </span>
       <span className="text-lg font-semibold tracking-tight text-slate-900">Nexus</span>
@@ -34,12 +35,13 @@ export function Navbar() {
     setMobileOpen(false);
   }, [pathname]);
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     router.push("/login");
   };
 
   const isActive = (href: string) => pathname === href || pathname?.startsWith(`${href}/`);
+  const visibleLinks = isAuthenticated ? links : [];
 
   return (
     <header className="sticky top-0 z-50 border-b border-gray-200 bg-white/80 backdrop-blur-md">
@@ -47,7 +49,7 @@ export function Navbar() {
         <NexusLogo />
 
         <nav className="hidden items-center gap-1 text-sm md:flex">
-          {links.map((link) => (
+          {visibleLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
@@ -67,7 +69,7 @@ export function Navbar() {
           {isAuthenticated ? (
             <>
               <span className="max-w-[10rem] truncate text-sm text-slate-500">
-                {user?.companyName}
+                {user?.organization.name}
               </span>
               <button
                 type="button"
@@ -87,7 +89,7 @@ export function Navbar() {
               </Link>
               <Link
                 href="/register"
-                className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-700"
+                className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-800"
               >
                 Регистрация
               </Link>
@@ -109,7 +111,7 @@ export function Navbar() {
       {mobileOpen ? (
         <div className="border-t border-gray-200 bg-white md:hidden">
           <nav className="mx-auto flex max-w-6xl flex-col gap-1 px-6 py-4 text-sm">
-            {links.map((link) => (
+            {visibleLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
@@ -129,7 +131,7 @@ export function Navbar() {
                   onClick={handleLogout}
                   className="w-full rounded-lg border border-gray-200 px-3 py-2.5 text-left font-medium text-slate-700 transition hover:bg-slate-50"
                 >
-                  Выйти ({user?.companyName})
+                  Выйти ({user?.organization.name})
                 </button>
               ) : (
                 <div className="flex flex-col gap-2">
@@ -141,7 +143,7 @@ export function Navbar() {
                   </Link>
                   <Link
                     href="/register"
-                    className="rounded-lg bg-emerald-600 px-3 py-2.5 text-center font-medium text-white"
+                    className="rounded-lg bg-emerald-700 px-3 py-2.5 text-center font-medium text-white"
                   >
                     Регистрация
                   </Link>

@@ -11,10 +11,10 @@ class FaqListResponseSchema(BaseModel):
     items: list[FaqItemSchema]
 
 
-class ChatRequestSchema(BaseModel):
+class CopilotRequestSchema(BaseModel):
     message: str = Field(..., min_length=1, max_length=1000)
 
 
-class ChatResponseSchema(BaseModel):
+class CopilotResponseSchema(BaseModel):
     reply: str
-    source: str = Field(..., description="'faq_cache' or 'gemini-flash' or 'fallback'")
+    source: str = Field(..., description="'faq_cache' | 'llm' | 'fallback'")

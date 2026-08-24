@@ -1,0 +1,33 @@
+{
+  "version": "1.0.0",
+  "source": "Nexus demo fixture. Синтетические данные для демонстрации; не являются реальными счетами, тарифами или рыночными коэффициентами.",
+  "tariff": {
+    "name": "Demo time-of-use тариф (fixture)",
+    "currency": "KZT",
+    "source": "Demo fixture — не реальный тариф поставщика",
+    "status": "approved",
+    "structure": {
+      "type": "time_of_use",
+      "zones": [
+        { "label": "peak", "rate_kzt_per_kwh": 42.0, "energy_share": 0.2 },
+        { "label": "day", "rate_kzt_per_kwh": 33.0, "energy_share": 0.6 },
+        { "label": "night", "rate_kzt_per_kwh": 21.0, "energy_share": 0.2 }
+      ]
+    }
+  },
+  "emission_factor": {
+    "value_kg_per_kwh": 0.7,
+    "unit": "kg CO2e/kWh",
+    "source": "Demo fixture — демонстрационный коэффициент, не рыночные данные",
+    "status": "approved"
+  },
+  "records": [
+    { "period_start": "2026-02-01", "period_end": "2026-02-28", "kwh": 2850, "cost_kzt": 93480, "fixed_charges_kzt": 3500 },
+    { "period_start": "2026-03-01", "period_end": "2026-03-31", "kwh": 2940, "cost_kzt": 96320, "fixed_charges_kzt": 3500 },
+    { "period_start": "2026-04-01", "period_end": "2026-04-30", "kwh": 2790, "cost_kzt": 91580, "fixed_charges_kzt": 3500 },
+    { "period_start": "2026-05-01", "period_end": "2026-05-31", "kwh": 2980, "cost_kzt": 97540, "fixed_charges_kzt": 3500 },
+    { "period_start": "2026-06-01", "period_end": "2026-06-30", "kwh": 3050, "cost_kzt": 99750, "fixed_charges_kzt": 3500 },
+    { "period_start": "2026-07-01", "period_end": "2026-07-31", "kwh": 3720, "cost_kzt": 120880, "fixed_charges_kzt": 3500 }
+  ],
+  "note": "Последний период содержит намеренное превышение (~+22% к июню и к медиане), чтобы продемонстрировать детектор аномалий с доказательством."
+}

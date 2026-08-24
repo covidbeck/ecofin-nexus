@@ -1,0 +1,86 @@
+{
+  "version": "1.0.0",
+  "status": "estimated",
+  "source": "Nexus internal assumptions v1 (demo). Savings shares are heuristic estimates the user reviews per organization; they are not measured market data.",
+  "lambda_risk_kzt_per_point": 500.0,
+  "lambda_effort_kzt_per_point": 300.0,
+  "actions": [
+    {
+      "id": "night_idle_reduction",
+      "label": "Отключение простаивающего оборудования ночью",
+      "description": "Плановое отключение дежурного оборудования и освещения вне смен.",
+      "savings_share": 0.06,
+      "capex_kzt": 0.0,
+      "risk_score": 0.5,
+      "effort_score": 1.0,
+      "schedule_shift_hours": 0.0,
+      "production_impact_share": 0.0,
+      "requires_tou": false,
+      "applies_to": ["office", "shop", "cafe", "bakery", "production", "warehouse", "hotel", "clinic"]
+    },
+    {
+      "id": "efficiency_maintenance",
+      "label": "Регламентное обслуживание и настройка оборудования",
+      "description": "Чистка теплообменников, калибровка уставок, устранение утечек воздуха/холода.",
+      "savings_share": 0.04,
+      "capex_kzt": 0.0,
+      "risk_score": 0.5,
+      "effort_score": 2.0,
+      "schedule_shift_hours": 0.0,
+      "production_impact_share": 0.0,
+      "requires_tou": false,
+      "applies_to": ["office", "shop", "cafe", "bakery", "production", "warehouse", "hotel", "clinic"]
+    },
+    {
+      "id": "schedule_optimization",
+      "label": "Оптимизация рабочего графика",
+      "description": "Сдвиг части операций к границам смен и уплотнение технологических окон.",
+      "savings_share": 0.05,
+      "capex_kzt": 0.0,
+      "risk_score": 1.5,
+      "effort_score": 2.0,
+      "schedule_shift_hours": 2.0,
+      "production_impact_share": 0.02,
+      "requires_tou": false,
+      "applies_to": ["cafe", "bakery", "production", "warehouse", "hotel"]
+    },
+    {
+      "id": "flexible_load_shift",
+      "label": "Перенос гибкой нагрузки в дешёвые зоны тарифа",
+      "description": "Перенос части гибкой нагрузки в непиковые зоны. Требует утверждённого time-of-use тарифа: без него денежный эффект недоступен.",
+      "savings_share": 0.0,
+      "capex_kzt": 0.0,
+      "risk_score": 1.0,
+      "effort_score": 2.0,
+      "schedule_shift_hours": 3.0,
+      "production_impact_share": 0.0,
+      "requires_tou": true,
+      "applies_to": ["bakery", "production", "warehouse"]
+    },
+    {
+      "id": "setpoint_tuning",
+      "label": "Корректировка уставок климата и холодильного оборудования",
+      "description": "Пересмотр температурных уставок в допустимых технологических границах.",
+      "savings_share": 0.03,
+      "capex_kzt": 0.0,
+      "risk_score": 1.0,
+      "effort_score": 1.0,
+      "schedule_shift_hours": 0.0,
+      "production_impact_share": 0.0,
+      "requires_tou": false,
+      "applies_to": ["office", "shop", "cafe", "hotel", "clinic", "warehouse"]
+    }
+  ],
+  "interactions": [
+    {
+      "pair": ["night_idle_reduction", "schedule_optimization"],
+      "gamma": 0.01,
+      "note": "Пересечение эффекта: часть ночного простоя уже устраняется оптимизацией графика."
+    },
+    {
+      "pair": ["efficiency_maintenance", "setpoint_tuning"],
+      "gamma": 0.005,
+      "note": "Пересечение эффекта на климатическом оборудовании."
+    }
+  ]
+}

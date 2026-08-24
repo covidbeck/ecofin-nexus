@@ -1,29 +1,52 @@
 # Nexus — Codex System Rules & Guardrails
 
-You are a Senior Full-Stack Engineer and System Architect building the Nexus MVP (Predictive Energy Management & ESG Underwriting SaaS) for the Future Minds Hackathon 2026 (EcoFin Track).
+You are a Senior Full-Stack Engineer and System Architect building Nexus — an
+explainable Resource Decision Engine for SMEs (digital twin of resource
+consumption; electricity first).
 
-Always consult and strictly adhere to SPECIFICATION.md before generating any code or proposing architecture changes.
+Always consult and strictly adhere to SPECIFICATION.md before generating any
+code or proposing architecture changes.
 
 ## 1. Core Engineering Principles (Non-Negotiable)
 
-- **Zero LLM Math**: Gemini/OpenAI must NEVER perform arithmetic, statistics, financial modeling, or carbon math. All calculations are deterministic pure Python in `backend/app/math_engine/`.
-- **AI as Data Extraction & Framing Layer Only**: External AI APIs are used exclusively for:
-  1. OCR/parsing unstructured documents (PDF, images, DOCX) into Pydantic DTOs.
-  2. Formatting deterministic math outputs into human-readable action plans and ESG underwriting reports.
-  3. Interactive support via the Virtual Consultant agent.
-- **API-First & Strict Validation**: All API contracts use Pydantic V2 in `backend/app/schemas/`. Never bypass validation.
-- **Fail-Safe & Fallback Resilience**: Every external LLM call must be wrapped in try/except with deterministic mock/fallback defaults so a live pitch never crashes.
+- **Zero LLM Math**: LLMs must NEVER perform arithmetic, statistics, tariff,
+  CO2e, anomaly or optimization math. All calculations are deterministic pure
+  Python in `backend/app/math_engine/`.
+- **AI as adapters only**: external OCR/LLM APIs are used exclusively to
+  (1) extract structured bill fields into Pydantic DTOs (user confirms them),
+  (2) explain already-confirmed deterministic results, (3) answer Copilot
+  questions on organization-scoped data, read-only.
+- **Honest data**: tariffs, emission factors, benchmarks and savings
+  coefficients are configurable, versioned records with source, validity dates
+  and status. If a tariff/CO2 factor is missing or unapproved, the result is
+  `unavailable` — never a plausible invented number. Every material number
+  carries a status: measured / confirmed / estimated / simulated / unavailable.
+- **API-First & Strict Validation**: all API contracts use Pydantic V2 in
+  `backend/app/schemas/`. Never bypass validation.
+- **Tenant isolation**: every query is scoped by `organization_id`; auth and
+  entitlements are enforced server-side. Passwords only as PBKDF2 hashes.
+- **Fail-Safe**: every external LLM/OCR call is wrapped in try/except with a
+  safe fallback — manual entry or clearly labeled demo fixtures. Never a fake
+  extraction result.
 
 ## 2. Tech Stack & Architecture
 
 - **Backend**: Python 3.12, FastAPI, SQLAlchemy 2, Alembic, Pydantic 2, PostgreSQL 16.
-- **Frontend**: Next.js (App Router), React 19, TypeScript, Tailwind CSS (emerald accents, slate neutrals), TanStack React Query, Recharts.
-- **Structure**: Strict separation between `backend/` and `frontend/`. Do not mix logic.
+- **Frontend**: Next.js (App Router), React 19, TypeScript, Tailwind CSS
+  (emerald accents, slate neutrals), TanStack React Query, Recharts.
+- **Structure**: modular monolith; strict separation between `backend/` and
+  `frontend/`. The frontend never computes authoritative numbers.
 
 ## 3. Code Generation Rules
 
 - Keep code modular, strictly typed, and production-ready.
-- Do not add unrequested features (no complex OAuth, no external mailers). Focus on the Golden Path demo flow.
-- Follow Kazakhstan 2026 regulatory context (MRP = 4,325 KZT, KREM tariffs for Astana/Almaty, Scope 2 EF = 0.892 t CO2/MWh).
-- Uploads: max 10 MB. Allowed: PDF, PNG, JPEG, WebP, DOCX. Oversize → 413. Wrong type → 415.
-- LLM JSON: strip markdown fences before `json.loads`. On any failure return fallback bill data (3000 kWh, 45000 KZT, bakery, astana, 30 days).
+- Do not add unrequested features (no OAuth/external identity providers, no
+  real payment processors, no external mailers). Focus on the Golden Path:
+  register → onboarding → bill/manual entry → digital twin → scenario →
+  best feasible recommendation → evidence panel.
+- Never promise guaranteed savings, loan/subsidy approval, penalty protection
+  or non-existent integrations in code, copy or docs.
+- Uploads: max 10 MB. Allowed: PDF, PNG, JPEG, WebP, DOCX. Oversize → 413.
+  Wrong type → 415.
+- LLM JSON: strip markdown fences before `json.loads`. On any failure return
+  `needs_manual_entry` — do not fabricate bill data.

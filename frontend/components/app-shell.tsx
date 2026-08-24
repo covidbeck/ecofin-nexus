@@ -2,14 +2,18 @@
 
 import { usePathname } from "next/navigation";
 
-import { AiFaqWidget } from "@/components/ai-faq-widget";
+import { CopilotWidget } from "@/components/copilot-widget";
 import { Navbar } from "@/components/navbar";
+import { useAuth } from "@/lib/auth-context";
 
 const BARE_ROUTES = ["/login", "/register"];
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const isBare = BARE_ROUTES.some((route) => pathname === route || pathname?.startsWith(`${route}/`));
+  const { isAuthenticated } = useAuth();
+  const isBare = BARE_ROUTES.some(
+    (route) => pathname === route || pathname?.startsWith(`${route}/`),
+  );
 
   if (isBare) {
     return <>{children}</>;
@@ -19,7 +23,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
     <>
       <Navbar />
       {children}
-      <AiFaqWidget />
+      {isAuthenticated ? <CopilotWidget /> : null}
     </>
   );
 }

@@ -1,20 +1,26 @@
----
-description: Golden rules — Zero LLM Math, AI extraction/framing, API-first, fail-safe
-alwaysApply: true
----
-
 # Nexus — Golden Rules
 
-Senior Full-Stack Engineer. MVP only. Follow SPECIFICATION.md.
+Senior Full-Stack Engineer. MVP only. Follow SPECIFICATION.md (Resource
+Decision Engine — explainable digital twin of SME resource consumption).
 
 ## Zero LLM Math
-Never compute numbers in the LLM, frontend, or service glue. All math is deterministic Python in `backend/app/math_engine/` only.
+Never compute numbers in the LLM, frontend, or service glue. All math is
+deterministic Python in `backend/app/math_engine/` only: cost/effective rate,
+baselines, anomalies, CO2e, scenarios, constraints, enumerative optimizer,
+confidence bands, calculation snapshots.
 
-## AI as extraction and framing
-Gemini/OpenAI may: (1) parse PDF/image/DOCX into Pydantic DTOs, (2) phrase math_engine JSON into roadmap/ESG text, (3) answer FAQs in the support widget. No arithmetic in prompts.
+## AI as adapters
+OCR/LLM may: (1) extract bill fields into Pydantic DTOs for user confirmation,
+(2) explain confirmed deterministic results, (3) answer Copilot questions on
+organization-scoped data read-only. On any failure fall back to manual entry
+or labeled demo fixtures — never fabricate data.
 
-## API-First
-Write Pydantic schemas before logic or UI. Validate every LLM payload in `backend/app/schemas/`.
+## Honest data
+Tariffs, emission factors, benchmarks and savings coefficients are versioned
+config records with source, validity and status. Missing/unapproved config →
+result is `unavailable`, not invented. Label numbers: measured / confirmed /
+estimated / simulated / unavailable.
 
-## Fail-safe
-Wrap every LLM call in try/except. On failure return deterministic fallback. Never crash the demo.
+## API-First & tenancy
+Write Pydantic schemas before logic or UI. All data scoped by
+`organization_id`; auth and entitlements enforced server-side.

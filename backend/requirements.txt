@@ -3,7 +3,7 @@ uvicorn
 python-multipart
 pydantic
 sqlalchemy
-psycopg
+psycopg[binary]
 alembic
 pytest
 google-generativeai

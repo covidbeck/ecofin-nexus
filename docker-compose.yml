@@ -8,7 +8,8 @@ services:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ecofin}
       POSTGRES_DB: ${POSTGRES_DB:-ecofin}
     ports:
-      - "5432:5432"
+      # Only reachable from this laptop — do not expose Postgres to the LAN.
+      - "127.0.0.1:5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
