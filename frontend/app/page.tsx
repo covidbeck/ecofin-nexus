@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { DemoLoginButton } from "@/components/demo-login-button";
+
 const PILLARS = [
   {
     title: "Объяснимый цифровой двойник",
@@ -25,47 +27,45 @@ const HONESTY = [
 export default function LandingPage() {
   return (
     <main className="mx-auto max-w-6xl px-6 pb-24">
-      <section className="py-20 text-center">
-        <span className="mb-5 inline-block rounded-full border border-emerald-200 bg-emerald-50 px-4 py-1.5 text-xs font-medium tracking-wide text-emerald-700">
+      <section className="landing-panel mt-10 px-6 py-16 text-center sm:px-10 sm:py-20">
+        <span className="mb-5 inline-block rounded-full border border-emerald-800 bg-lime-200 px-4 py-1.5 text-xs font-semibold tracking-wide text-emerald-950">
           Resource Decision Engine для малого и среднего бизнеса
         </span>
-        <h1 className="mx-auto max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-slate-900 sm:text-5xl">
+        <h1 className="mx-auto max-w-3xl text-4xl font-semibold leading-tight tracking-tight text-emerald-950 sm:text-5xl">
           Решения по ресурсам, которым можно доверять
         </h1>
-        <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-slate-600">
+        <p className="mx-auto mt-5 max-w-2xl text-lg leading-relaxed text-emerald-900">
           Nexus превращает счета за электроэнергию в объяснимый цифровой двойник
           предприятия: проверяет отклонения, моделирует сценарии и рекомендует лучший из
           выполнимых вариантов. Каждое число имеет источник, статус и снимок расчёта.
         </p>
         <div className="mt-8 flex flex-wrap justify-center gap-3">
-          <Link
-            href="/register"
-            className="rounded-lg bg-emerald-700 px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-emerald-800"
-          >
+          <DemoLoginButton className="btn-primary px-6 py-3 text-sm" tone="on-light" />
+          <Link href="/register" className="btn-secondary px-6 py-3 text-sm">
             Начать бесплатно
           </Link>
           <Link
             href="/login"
-            className="rounded-lg border border-gray-200 bg-white px-6 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300"
+            className="inline-flex items-center justify-center rounded-full border border-emerald-800 bg-white px-6 py-3 text-sm font-semibold text-emerald-950 transition hover:-translate-y-0.5 hover:bg-lime-100"
           >
             Войти
           </Link>
         </div>
       </section>
 
-      <section className="grid gap-6 md:grid-cols-3">
+      <section className="mt-8 grid gap-6 md:grid-cols-3">
         {PILLARS.map((pillar) => (
-          <div key={pillar.title} className="card p-6">
-            <h2 className="mb-2 text-base font-semibold text-slate-900">{pillar.title}</h2>
-            <p className="text-sm leading-relaxed text-slate-600">{pillar.text}</p>
+          <div key={pillar.title} className="landing-panel p-6">
+            <h2 className="mb-2 text-base font-semibold text-emerald-950">{pillar.title}</h2>
+            <p className="text-sm leading-relaxed text-emerald-900">{pillar.text}</p>
           </div>
         ))}
       </section>
 
-      <section className="mt-16 grid gap-8 rounded-2xl border border-gray-200 bg-white p-8 shadow-sm md:grid-cols-2">
+      <section className="landing-panel mt-16 grid gap-8 p-8 md:grid-cols-2">
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">Как это работает</h2>
-          <ol className="mt-4 flex list-decimal flex-col gap-3 pl-5 text-sm leading-relaxed text-slate-700">
+          <h2 className="text-xl font-semibold text-emerald-950">Как это работает</h2>
+          <ol className="mt-4 flex list-decimal flex-col gap-3 pl-5 text-sm leading-relaxed text-emerald-900">
             <li>Регистрация и короткий онбординг: тип предприятия, регион, ограничения.</li>
             <li>
               Загрузка счёта (PDF, PNG, JPEG, WebP, DOCX до 10 МБ) — ИИ извлекает поля, вы
@@ -82,15 +82,15 @@ export default function LandingPage() {
           </ol>
         </div>
         <div>
-          <h2 className="text-xl font-semibold text-slate-900">Принцип честных данных</h2>
-          <p className="mt-2 text-sm leading-relaxed text-slate-600">
+          <h2 className="text-xl font-semibold text-emerald-950">Принцип честных данных</h2>
+          <p className="mt-2 text-sm leading-relaxed text-emerald-900">
             ИИ в Nexus не считает числа: вся математика — детерминированный серверный слой.
             Каждое значение помечено статусом:
           </p>
           <ul className="mt-4 flex flex-col gap-2">
             {HONESTY.map(([label, text]) => (
-              <li key={label} className="flex items-start gap-3 text-sm text-slate-700">
-                <code className="rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-800">
+              <li key={label} className="flex items-start gap-3 text-sm text-emerald-900">
+                <code className="rounded-full bg-lime-200 px-2 py-0.5 text-xs text-emerald-950">
                   {label}
                 </code>
                 {text}
@@ -100,7 +100,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="mt-16 border-t border-gray-200 pt-8 text-center text-xs text-slate-400">
+      <footer className="mt-16 border-t border-emerald-800 pt-8 text-center text-xs text-emerald-900">
         Nexus MVP · симуляции не являются гарантией экономии; результаты зависят от ваших
         данных и подтверждённых конфигураций.
       </footer>

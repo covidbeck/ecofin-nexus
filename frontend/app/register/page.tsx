@@ -4,11 +4,12 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
+import { DemoLoginButton } from "@/components/demo-login-button";
 import { useAuth } from "@/lib/auth-context";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const { register, isAuthenticated, isHydrated, user } = useAuth();
+  const { register, isAuthenticated, isHydrated } = useAuth();
   const [form, setForm] = useState({
     name: "",
     organization_name: "",
@@ -20,9 +21,9 @@ export default function RegisterPage() {
 
   useEffect(() => {
     if (isHydrated && isAuthenticated) {
-      router.replace(user?.organization.onboarding_complete ? "/dashboard" : "/onboarding");
+      router.replace("/dashboard");
     }
-  }, [isHydrated, isAuthenticated, router, user?.organization.onboarding_complete]);
+  }, [isHydrated, isAuthenticated, router]);
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -42,63 +43,55 @@ export default function RegisterPage() {
     }
   };
 
-  const field =
-    "mt-1.5 w-full rounded-lg border border-gray-300 px-3.5 py-2.5 text-sm text-slate-900 outline-none transition focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/20";
-
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-50 px-6 py-12">
+    <main className="flex min-h-[calc(100vh-4rem)] items-center justify-center px-6 py-12">
       <div className="w-full max-w-md">
-        <Link href="/" className="flex items-center justify-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-emerald-700 text-base font-bold text-white">
-            N
-          </span>
-          <span className="text-xl font-semibold tracking-tight text-slate-900">Nexus</span>
-        </Link>
-
-        <form
-          onSubmit={handleSubmit}
-          className="mt-8 rounded-2xl border border-gray-200 bg-white p-6 shadow-sm"
-        >
-          <h1 className="text-lg font-semibold text-slate-900">Регистрация организации</h1>
-          <p className="mt-1 text-sm text-slate-500">
+        <form onSubmit={handleSubmit} className="card p-8">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-emerald-800">
+            Новая организация
+          </p>
+          <h1 className="mt-2 text-2xl font-semibold tracking-tight text-emerald-950">
+            Регистрация организации
+          </h1>
+          <p className="mt-2 text-sm leading-relaxed text-emerald-900">
             Создаётся отдельное пространство вашей организации. После регистрации — короткий
             онбординг.
           </p>
 
-          <div className="mt-5 space-y-4">
+          <div className="mt-6 space-y-4">
             <label className="block">
-              <span className="text-sm font-medium text-slate-700">Ваше имя</span>
+              <span className="text-sm font-medium text-emerald-900">Ваше имя</span>
               <input
                 required
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Айгерим"
-                className={field}
+                className="mt-1.5 w-full px-3.5 py-2.5 text-sm"
               />
             </label>
             <label className="block">
-              <span className="text-sm font-medium text-slate-700">Название организации</span>
+              <span className="text-sm font-medium text-emerald-900">Название организации</span>
               <input
                 required
                 value={form.organization_name}
                 onChange={(e) => setForm({ ...form, organization_name: e.target.value })}
                 placeholder="ТОО «Ваша компания»"
-                className={field}
+                className="mt-1.5 w-full px-3.5 py-2.5 text-sm"
               />
             </label>
             <label className="block">
-              <span className="text-sm font-medium text-slate-700">Email</span>
+              <span className="text-sm font-medium text-emerald-900">Email</span>
               <input
                 type="email"
                 required
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 placeholder="you@company.kz"
-                className={field}
+                className="mt-1.5 w-full px-3.5 py-2.5 text-sm"
               />
             </label>
             <label className="block">
-              <span className="text-sm font-medium text-slate-700">Пароль (мин. 8 символов)</span>
+              <span className="text-sm font-medium text-emerald-900">Пароль (мин. 8 символов)</span>
               <input
                 type="password"
                 required
@@ -106,28 +99,28 @@ export default function RegisterPage() {
                 value={form.password}
                 onChange={(e) => setForm({ ...form, password: e.target.value })}
                 placeholder="••••••••"
-                className={field}
+                className="mt-1.5 w-full px-3.5 py-2.5 text-sm"
               />
             </label>
           </div>
 
           {error ? (
-            <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3.5 py-2.5 text-sm text-red-700">
+            <p className="mt-4 rounded-2xl border border-red-300 bg-red-50 px-3.5 py-2.5 text-sm text-red-800">
               {error}
             </p>
           ) : null}
 
-          <button
-            type="submit"
-            disabled={busy}
-            className="mt-5 w-full rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:opacity-50"
-          >
+          <button type="submit" disabled={busy} className="btn-primary mt-6 w-full py-3">
             {busy ? "Создаём аккаунт…" : "Создать аккаунт"}
           </button>
 
-          <p className="mt-4 text-center text-sm text-slate-500">
+          <div className="mt-4">
+            <DemoLoginButton className="btn-secondary w-full py-3" fullWidth tone="on-light" />
+          </div>
+
+          <p className="mt-5 text-center text-sm text-emerald-900">
             Уже есть аккаунт?{" "}
-            <Link href="/login" className="font-medium text-emerald-700 hover:text-emerald-800">
+            <Link href="/login" className="font-semibold text-emerald-800 hover:text-emerald-950">
               Войти
             </Link>
           </p>

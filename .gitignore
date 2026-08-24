@@ -52,6 +52,7 @@ frontend/out/
 .next/
 out/
 .turbo/
+*.tsbuildinfo
 
 # Env & secrets — NEVER commit .env
 .env
@@ -69,6 +70,7 @@ Thumbs.db
 
 # Docker
 *.log
+test-out.txt
 
 # Alembic / local
 *.db

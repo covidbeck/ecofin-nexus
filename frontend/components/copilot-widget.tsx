@@ -42,16 +42,16 @@ export function CopilotWidget() {
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         aria-label="Открыть Copilot"
-        className="fixed bottom-6 right-6 z-40 flex h-13 w-13 items-center justify-center rounded-full bg-emerald-700 p-4 text-lg font-semibold text-white shadow-lg transition hover:bg-emerald-800"
+        className="fixed bottom-6 right-6 z-40 flex h-13 w-13 items-center justify-center rounded-full bg-lime-100 p-4 text-lg font-semibold text-emerald-950 shadow-[0_0_28px_rgba(190,242,100,0.45)] transition hover:bg-white"
       >
         {open ? "✕" : "?"}
       </button>
 
       {open ? (
-        <div className="fixed bottom-24 right-6 z-40 flex max-h-[70vh] w-[22rem] flex-col overflow-hidden rounded-xl border border-gray-200 bg-white shadow-xl animate-fade-in">
-          <div className="border-b border-gray-100 bg-emerald-700 px-4 py-3">
-            <p className="text-sm font-semibold text-white">Nexus Copilot</p>
-            <p className="text-xs text-emerald-100">
+        <div className="card fixed bottom-24 right-6 z-40 flex max-h-[70vh] w-[22rem] flex-col overflow-hidden animate-fade-in">
+          <div className="border-b border-lime-100/15 bg-emerald-900/70 px-4 py-3">
+            <p className="text-sm font-semibold text-lime-100">Nexus Copilot</p>
+            <p className="text-xs text-emerald-100/80">
               Объясняет подтверждённые расчёты. Не считает числа и не меняет данные.
             </p>
           </div>
@@ -67,7 +67,7 @@ export function CopilotWidget() {
                     key={item.id}
                     type="button"
                     onClick={() => ask(item.question)}
-                    className="rounded-lg border border-gray-200 px-3 py-2 text-left text-sm text-slate-700 transition hover:border-emerald-300 hover:bg-emerald-50"
+                    className="rounded-2xl border border-lime-100/20 px-3 py-2 text-left text-sm text-emerald-50 transition hover:bg-white/10"
                   >
                     {item.question}
                   </button>
@@ -83,8 +83,8 @@ export function CopilotWidget() {
                     key={index}
                     className={`max-w-[85%] rounded-lg px-3 py-2 text-sm leading-relaxed ${
                       message.role === "user"
-                        ? "self-end bg-emerald-700 text-white"
-                        : "self-start bg-slate-100 text-slate-800"
+                        ? "self-end bg-lime-100 text-emerald-950"
+                        : "self-start bg-emerald-950/50 text-emerald-50"
                     }`}
                   >
                     {message.text}
@@ -111,7 +111,7 @@ export function CopilotWidget() {
             <button
               type="submit"
               disabled={busy || !input.trim()}
-              className="rounded-lg bg-emerald-700 px-3 py-2 text-sm font-medium text-white transition hover:bg-emerald-800 disabled:opacity-50"
+              className="btn-primary disabled:opacity-50"
             >
               →
             </button>

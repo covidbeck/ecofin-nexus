@@ -33,6 +33,10 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:-ecofin}
       GEMINI_API_KEY: ${GEMINI_API_KEY:-}
       GEMINI_MODEL: ${GEMINI_MODEL:-gemini-1.5-pro}
+      DEMO_MODE: ${DEMO_MODE:-true}
+      DEMO_PASSWORD: ${DEMO_PASSWORD:-}
+      DEMO_EMAIL: ${DEMO_EMAIL:-jury@nexus.demo}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:3000,http://127.0.0.1:3000}
     ports:
       - "8000:8000"
     depends_on:

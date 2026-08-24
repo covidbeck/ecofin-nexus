@@ -11,6 +11,7 @@ import {
 } from "react";
 
 import {
+  apiDemoLogin,
   apiLogin,
   apiLogout,
   apiRegister,
@@ -32,6 +33,7 @@ type AuthContextValue = {
   isAuthenticated: boolean;
   isHydrated: boolean;
   login: (email: string, password: string) => Promise<UserResponse>;
+  demoLogin: () => Promise<UserResponse>;
   register: (input: RegisterInput) => Promise<UserResponse>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
@@ -73,6 +75,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return response.user;
   }, []);
 
+  const demoLogin = useCallback(async () => {
+    const response = await apiDemoLogin();
+    setToken(response.token);
+    setUser(response.user);
+    queryClient.clear();
+    return response.user;
+  }, [queryClient]);
+
   const register = useCallback(async (input: RegisterInput) => {
     const response = await apiRegister(input);
     setToken(response.token);
@@ -106,11 +116,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isAuthenticated: user !== null,
       isHydrated,
       login,
+      demoLogin,
       register,
       logout,
       refreshUser,
     }),
-    [user, isHydrated, login, register, logout, refreshUser],
+    [user, isHydrated, login, demoLogin, register, logout, refreshUser],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

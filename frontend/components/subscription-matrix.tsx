@@ -41,14 +41,14 @@ export function SubscriptionMatrix() {
           Права применяются на сервере. Оплата в MVP — демонстрационная: реальный платёжный
           провайдер не подключён, карта никуда не отправляется.
         </p>
-        <div className="mt-5 inline-flex rounded-lg border border-gray-200 bg-white p-1 text-sm">
+        <div className="mt-5 inline-flex rounded-full border border-emerald-200/20 bg-emerald-950/20 p-1 text-sm">
           {(["month", "year"] as const).map((option) => (
             <button
               key={option}
               type="button"
               onClick={() => setCycle(option)}
-              className={`rounded-md px-4 py-1.5 font-medium transition ${
-                cycle === option ? "bg-emerald-700 text-white" : "text-slate-600 hover:text-slate-900"
+              className={`rounded-full px-4 py-1.5 font-medium transition ${
+                cycle === option ? "bg-lime-100 text-emerald-950" : "text-emerald-100 hover:text-white"
               }`}
             >
               {option === "month" ? "Месяц" : "Год (−20%)"}
@@ -71,11 +71,11 @@ export function SubscriptionMatrix() {
               <div
                 key={plan.id}
                 className={`card relative flex flex-col gap-4 p-6 ${
-                  isPro ? "border-emerald-300 shadow-md ring-1 ring-emerald-200" : ""
+                  isPro ? "ring-1 ring-lime-200/40" : ""
                 }`}
               >
                 {isPro ? (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-emerald-700 px-3 py-1 text-xs font-medium text-white">
+                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-lime-100 px-3 py-1 text-xs font-medium text-emerald-950">
                     Основной план
                   </span>
                 ) : null}
@@ -101,12 +101,12 @@ export function SubscriptionMatrix() {
                   type="button"
                   disabled={isCurrent}
                   onClick={() => setPendingPlan(plan)}
-                  className={`rounded-lg px-4 py-2.5 text-sm font-medium transition ${
+                  className={`rounded-full px-4 py-2.5 text-sm font-medium transition ${
                     isCurrent
-                      ? "cursor-default border border-emerald-200 bg-emerald-50 text-emerald-700"
+                      ? "cursor-default border border-lime-200/40 bg-lime-100/20 text-lime-100"
                       : isPro
-                        ? "bg-emerald-700 text-white hover:bg-emerald-800"
-                        : "border border-gray-200 text-slate-700 hover:border-emerald-300"
+                        ? "bg-lime-100 text-emerald-950 hover:bg-white"
+                        : "border border-lime-100/25 text-emerald-50 hover:bg-white/10"
                   }`}
                 >
                   {isCurrent ? "Текущий план" : "Выбрать план"}

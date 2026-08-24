@@ -73,7 +73,7 @@ from app.schemas.subscription import (
 )
 from app.services.catalog import catalog_schema
 from app.services.copilot import CopilotService
-from app.services.demo import seed_demo_data
+from app.services.demo import ensure_demo_workspace, seed_demo_data
 from app.services.entitlements import (
     PLANS,
     ensure_can_add_record,
@@ -247,6 +247,19 @@ async def me(
     organization: Organization = Depends(get_current_organization),
 ) -> UserResponseSchema:
     return _user_response(user, organization)
+
+
+@router.post("/auth/demo-login", response_model=AuthResponseSchema)
+async def demo_login(db: Session = Depends(get_db)) -> AuthResponseSchema:
+    if not settings.demo_mode:
+        raise HTTPException(status_code=404, detail="Демо-вход отключён.")
+    user, organization = ensure_demo_workspace(db)
+    token, expires_at = _issue_session(db, user)
+    return AuthResponseSchema(
+        token=token,
+        expires_at=expires_at.isoformat(),
+        user=_user_response(user, organization),
+    )
 
 
 # ---------------------------------------------------------------- organization

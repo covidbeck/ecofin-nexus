@@ -17,15 +17,15 @@ type ToastContextValue = {
 const ToastContext = createContext<ToastContextValue | null>(null);
 
 const TONE: Record<ToastKind, string> = {
-  error: "border-red-200 bg-red-50 text-red-800",
-  success: "border-emerald-200 bg-emerald-50 text-emerald-800",
-  info: "border-gray-200 bg-white text-slate-800",
+  error: "border-red-400/40 bg-red-950/80 text-red-100",
+  success: "border-lime-200/40 bg-emerald-950/90 text-lime-100",
+  info: "border-emerald-200/30 bg-emerald-950/90 text-emerald-50",
 };
 
 const ICON_TONE: Record<ToastKind, string> = {
-  error: "bg-red-100 text-red-700",
-  success: "bg-emerald-100 text-emerald-700",
-  info: "bg-slate-100 text-slate-700",
+  error: "bg-red-500/30 text-red-100",
+  success: "bg-lime-200/20 text-lime-100",
+  info: "bg-emerald-400/20 text-emerald-50",
 };
 
 const ICON: Record<ToastKind, string> = {
@@ -61,7 +61,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
           <div
             key={toast.id}
             role="alert"
-            className={`animate-fade-in pointer-events-auto flex items-start gap-3 rounded-xl border px-4 py-3 text-sm shadow-lg shadow-slate-900/5 ${TONE[toast.kind]}`}
+            className={`animate-fade-in pointer-events-auto flex items-start gap-3 rounded-2xl border px-4 py-3 text-sm ${TONE[toast.kind]}`}
           >
             <span
               className={`mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[11px] font-bold ${ICON_TONE[toast.kind]}`}

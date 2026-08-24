@@ -3,10 +3,11 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 
-import { StatusBadge, formatNumber } from "@/components/status-badge";
+import { TrustBadge, formatNumber } from "@/components/status-badge";
 import { createConsumption, fetchConsumption, uploadBill } from "@/lib/api";
 import { useToast } from "@/lib/toast";
 import type { BillUploadResponse, ConsumptionCreate } from "@/lib/types";
+import { billSourceLabel, billTrustLabel, periodShortLabel } from "@/lib/ux-copy";
 
 const MAX_SIZE_BYTES = 10 * 1024 * 1024;
 const ALLOWED_EXTENSIONS = [".pdf", ".png", ".jpg", ".jpeg", ".webp", ".docx"];
@@ -76,7 +77,7 @@ export function BillsManager() {
   const confirmMutation = useMutation({
     mutationFn: createConsumption,
     onSuccess: () => {
-      showToast("Период подтверждён и добавлен в цифровой двойник", "success");
+      showToast("Период подтверждён и добавлен в расчёты", "success");
       setExtraction(null);
       setShowForm(false);
       setForm(EMPTY_FORM);
@@ -128,9 +129,9 @@ export function BillsManager() {
     <div className="flex flex-col gap-6 animate-fade-in">
       <div>
         <h1 className="text-2xl font-semibold tracking-tight text-slate-900">Счета и данные</h1>
-        <p className="text-sm text-slate-500">
-          Загрузите счёт (ИИ извлечёт поля, вы подтвердите) или введите значения вручную.
-          Всё, что попадает в расчёты, подтверждается человеком.
+        <p className="mt-1 max-w-2xl text-sm leading-relaxed text-slate-500">
+          Загрузите счёт или введите значения вручную. Цифры попадают в расчёт только после вашего
+          подтверждения.
         </p>
       </div>
 
@@ -167,7 +168,7 @@ export function BillsManager() {
               <button
                 type="button"
                 onClick={() => inputRef.current?.click()}
-                className="mt-1 rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-emerald-800"
+                className="btn-primary mt-1"
               >
                 Выбрать файл
               </button>
@@ -283,13 +284,13 @@ export function BillsManager() {
               <button
                 type="submit"
                 disabled={confirmMutation.isPending}
-                className="mt-1 rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-emerald-800 disabled:opacity-50"
+                className="btn-primary mt-1 disabled:opacity-50"
               >
                 {confirmMutation.isPending ? "Сохраняем…" : "Подтвердить и добавить в расчёты"}
               </button>
-              <p className="text-xs text-slate-400">
-                Запись получит статус «подтверждено человеком». ИИ никогда не записывает
-                данные в расчёты без вашего подтверждения.
+              <p className="text-xs leading-relaxed text-slate-400">
+                Вы подтверждаете цифры до использования в расчёте. ИИ не записывает данные без этой
+                проверки.
               </p>
             </form>
           ) : (
@@ -302,7 +303,12 @@ export function BillsManager() {
       </div>
 
       <div className="card p-6">
-        <h2 className="mb-4 text-sm font-semibold text-slate-700">Подтверждённые периоды</h2>
+        <div className="mb-4">
+          <h2 className="text-sm font-semibold text-slate-700">Подтверждённые периоды</h2>
+          <p className="mt-1 text-sm text-slate-500">
+            Насколько можно доверять расчёту — по источнику данных, а не по внутреннему статусу.
+          </p>
+        </div>
         {recordsQuery.isLoading ? (
           <p className="text-sm text-slate-500">Загружаем…</p>
         ) : records.length === 0 ? (
@@ -311,21 +317,19 @@ export function BillsManager() {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm">
               <thead>
-                <tr className="border-b border-gray-100 text-xs uppercase tracking-wide text-slate-400">
+                <tr className="border-b border-gray-100 text-xs text-slate-400">
                   <th className="py-2 pr-4 font-medium">Период</th>
                   <th className="py-2 pr-4 font-medium">кВт·ч</th>
                   <th className="py-2 pr-4 font-medium">Сумма, ₸</th>
-                  <th className="py-2 pr-4 font-medium">Эфф. ставка</th>
-                  <th className="py-2 pr-4 font-medium">Источник</th>
-                  <th className="py-2 font-medium">Качество</th>
+                  <th className="py-2 pr-4 font-medium">Цена, ₸/кВт·ч</th>
+                  <th className="py-2 pr-4 font-medium">Откуда</th>
+                  <th className="py-2 font-medium">Насколько можно доверять расчёту</th>
                 </tr>
               </thead>
               <tbody>
                 {records.map((record) => (
                   <tr key={record.id} className="border-b border-gray-50 text-slate-700">
-                    <td className="py-2.5 pr-4">
-                      {record.period_start} — {record.period_end}
-                    </td>
+                    <td className="py-2.5 pr-4">{periodShortLabel(record)}</td>
                     <td className="py-2.5 pr-4">{formatNumber(record.kwh)}</td>
                     <td className="py-2.5 pr-4">{formatNumber(record.cost_kzt)}</td>
                     <td className="py-2.5 pr-4">
@@ -333,17 +337,9 @@ export function BillsManager() {
                         ? `${formatNumber(record.effective_rate, 2)} ₸/кВт·ч`
                         : "—"}
                     </td>
-                    <td className="py-2.5 pr-4">
-                      {record.source === "upload"
-                        ? "счёт"
-                        : record.source === "manual"
-                          ? "вручную"
-                          : "demo"}
-                    </td>
+                    <td className="py-2.5 pr-4">{billSourceLabel(record.source)}</td>
                     <td className="py-2.5">
-                      <StatusBadge
-                        status={record.data_quality === "measured" ? "measured" : "estimated"}
-                      />
+                      <TrustBadge {...billTrustLabel(record)} />
                     </td>
                   </tr>
                 ))}

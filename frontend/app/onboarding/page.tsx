@@ -168,7 +168,7 @@ function OnboardingForm() {
         <button
           type="submit"
           disabled={mutation.isPending}
-          className="rounded-lg bg-emerald-700 px-5 py-3 text-sm font-semibold text-white transition hover:bg-emerald-800 disabled:opacity-50"
+          className="btn-primary disabled:opacity-50"
         >
           {mutation.isPending ? "Сохраняем…" : "Сохранить и перейти к данным"}
         </button>

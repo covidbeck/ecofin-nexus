@@ -29,6 +29,7 @@ import type {
 export const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000";
 
 const TOKEN_KEY = "nexus.token";
+const OFFLINE_MESSAGE = "Не удалось подключиться к сервису. Попробуйте обновить страницу.";
 
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
@@ -51,18 +52,25 @@ export class ApiError extends Error {
   }
 }
 
+function publicErrorMessage(message: string): string {
+  if (/\b(?:\d{1,3}\.){3}\d{1,3}\b/.test(message) || /https?:\/\//i.test(message)) {
+    return OFFLINE_MESSAGE;
+  }
+  return message;
+}
+
 function detailMessage(detail: unknown): string | null {
-  if (typeof detail === "string" && detail.trim()) return detail;
+  if (typeof detail === "string" && detail.trim()) return publicErrorMessage(detail);
   if (Array.isArray(detail)) {
-    return (
+    const joined =
       detail
         .map((item) =>
           item && typeof item === "object" && "msg" in item
             ? String((item as { msg: unknown }).msg)
             : String(item),
         )
-        .join("; ") || null
-    );
+        .join("; ") || null;
+    return joined ? publicErrorMessage(joined) : null;
   }
   return null;
 }
@@ -78,9 +86,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   try {
     response = await fetch(`${API_BASE}${path}`, { ...init, headers });
   } catch {
-    throw new ApiError(
-      `Сервис Nexus временно недоступен. Проверьте, что API запущен (${API_BASE}).`,
-    );
+    throw new ApiError(OFFLINE_MESSAGE);
   }
 
   if (!response.ok) {
@@ -91,7 +97,7 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     } catch {
       /* keep fallback message */
     }
-    throw new ApiError(message, response.status);
+    throw new ApiError(publicErrorMessage(message), response.status);
   }
 
   return (await response.json()) as T;
@@ -118,6 +124,10 @@ export function apiRegister(input: {
 
 export function apiLogin(email: string, password: string): Promise<AuthResponse> {
   return request<AuthResponse>("/api/v1/auth/login", jsonInit("POST", { email, password }));
+}
+
+export function apiDemoLogin(): Promise<AuthResponse> {
+  return request<AuthResponse>("/api/v1/auth/demo-login", { method: "POST" });
 }
 
 export function apiLogout(): Promise<{ status: string }> {
